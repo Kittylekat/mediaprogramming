@@ -169,6 +169,7 @@ public class AuctionService {
 		return auction; 
 	}
 	
+	//GET /auctions/{identity}/bid (new): Returns the requester's bid for the given auction, or null if none exists.
 	@GET
 	@Path("/{identity}/bid")
 	@Produces({"application/xml", "application/json"})
@@ -187,6 +188,7 @@ public class AuctionService {
 		return null;
 	}
 	
+	//POST /auctions/{identity}/bid (new): Creates or modifies the requester's bid for the given auction, depending on the requester and the price (in cent) within the given request body. If the price is zero, then the requester's bid is removed instead.
 	@POST
 	@Path("/{identity}/bid")
 	@Consumes({"application/xml", "application/json"})
@@ -217,6 +219,7 @@ public class AuctionService {
 		} else{
 			bid.setPrice(template.getPrice());
 			bid.setVersion(template.getVersion());
+			
 		}
 
 		try {
