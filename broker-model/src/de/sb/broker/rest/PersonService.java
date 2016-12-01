@@ -34,50 +34,7 @@ public class PersonService {
 	//static EntityManagerFactory ENTITY_MANAGER_FACTORY;
 	//final EntityManager em = ENTITY_MANAGER_FACTORY.createEntityManager();
 
-	//GET /people: Returns the people matching the given criteria, with null or missing parameters identifying omitted criteria.
-	/*
-	@GET
-	@Produces({"application/xml", "application/json"})
-	public Person[] getPeople(		
-			@QueryParam("alias") String alias,
-			@QueryParam("firstName") String givenName,
-			@QueryParam("familyName") String familyName,
-			@QueryParam("email") String email,
-			@QueryParam("phone") String phone,
-			@QueryParam("street") String street,
-			@QueryParam("postcode") String postcode,
-			@QueryParam("city") String city,
-			@QueryParam("creationtimeLower") Long creationtimeLower,
-			@QueryParam("creationtimeUpper") Long creationtimeUpper){
-		
-		//final EntityManager em = ENTITY_MANAGER_FACTORY.createEntityManager();
-		em.getTransaction().begin();
-		
-		//Build Query String - if the query is a success the entitymanager will return a long which symbols the Person ID
-		String squery = "select p.identity from Person as p WHERE";
-		if(alias != null) { squery += " (:alias is null or p.alias = :alias)";}	
-		//if(givenName != null) { squery += " (:givenName is null or p.givenName = :givenName)";}	
-		TypedQuery<Long> query = em.createQuery(squery, Long.class);
-		
-		//Set parameter. :value will be overwritten
-		query.setParameter("alias", alias);			
-		List<Long> personIDs = query.getResultList();
-		List<Person> persons = new LinkedList<Person>();
-		if(!personIDs.isEmpty()){
-			for (Long id : personIDs) {
-				Person person = em.find(Person.class, id);
-				if (person != null)
-				{
-					persons.add(person);
-				}
-			}						
-		}
-		
-		Person[] person_array = persons.toArray(new Person[0]);
-		
-		return person_array;
-	}*/
-	
+	//GET /people: Returns the people matching the given criteria, with null or missing parameters identifying omitted criteria.	
 	@GET
 	@Produces({"application/xml", "application/json"})
 	public Person[] getPeople(
@@ -245,7 +202,7 @@ public class PersonService {
 		return bids.toArray(new Bid[0]);
 	}
 
-	
+	//GET /people/requester (new): Returns the authenticated requester, which is useful for login operations.
 	@GET
 	@Path("/requester")
 	@Produces({"application/xml", "application/json"})
@@ -254,6 +211,7 @@ public class PersonService {
 		return LifeCycleProvider.authenticate(authentication);
 	}
 	
+	//PUT /people: Requesters that are not part of group ADMIN are both forbidden to alter other people, and to set their own group to ADMIN.
 	@PUT
 	@Consumes({"application/xml", "application/json"})
 	public Long createOrUpdatePerson(
